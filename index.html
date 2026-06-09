@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MantIA — Sistema de mantenimiento inteligente · Ajover</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0e0e0e;
+    --white: #ffffff;
+    --surface: #f7f6f3;
+    --surface2: #eeecea;
+    --border: #dddbd7;
+    --border-light: #ebebeb;
+    --text: #1a1a1a;
+    --text-muted: #6b6966;
+    --text-light: #9e9b97;
+    --accent: #e63 ;
+    --accent-bg: #fff4ef;
+    --accent2: #1a56db;
+    --accent2-bg: #eff6ff;
+    --green: #1a7a4a;
+    --green-bg: #edfaf2;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --red: #c0392b;
+    --red-bg: #fef2f2;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 700;
+    color: var(--black); letter-spacing: -0.3px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-size: 14px; color: var(--text-muted);
+    text-decoration: none; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-badge {
+    font-size: 12px; font-weight: 500;
+    background: var(--accent-bg); color: var(--accent);
+    border: 1px solid #f4c5ae; border-radius: 20px;
+    padding: 4px 12px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 40px 80px;
+    max-width: 900px; margin: 0 auto; text-align: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-bg);
+    border: 1px solid #f4c5ae; border-radius: 20px;
+    padding: 5px 14px; margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); display: block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5.5vw, 60px);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -1.5px; color: var(--black);
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p {
+    font-size: 18px; color: var(--text-muted);
+    max-width: 620px; margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+  .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--black); color: var(--white);
+    padding: 13px 28px; border-radius: var(--radius);
+    font-size: 15px; font-weight: 500; text-decoration: none;
+    transition: background .2s, transform .15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); padding: 13px 28px;
+    border-radius: var(--radius); font-size: 15px;
+    font-weight: 500; text-decoration: none;
+    transition: background .2s; display: inline-block;
+  }
+  .btn-secondary:hover { background: var(--surface2); }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--black); color: var(--white);
+    padding: 32px 40px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0; max-width: 100%;
+  }
+  .stat-item {
+    text-align: center; padding: 16px 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px; font-weight: 700;
+    color: var(--white); display: block;
+    letter-spacing: -1px; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num span { color: #ff7a47; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  /* SECTION COMMON */
+  section { padding: 80px 40px; }
+  .section-inner { max-width: 1060px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px; display: block;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 700; letter-spacing: -0.8px;
+    color: var(--black); line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 17px; color: var(--text-muted);
+    max-width: 580px; line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* PROBLEMA */
+  #problema { background: var(--surface); }
+  .problema-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 16px;
+  }
+  .problema-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px 28px;
+  }
+  .problema-card .icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+  .icon-red { background: var(--red-bg); }
+  .icon-amber { background: var(--amber-bg); }
+  .problema-card h3 {
+    font-family: var(--font-display);
+    font-size: 17px; font-weight: 600; margin-bottom: 10px;
+    color: var(--black);
+  }
+  .problema-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+  /* SOLUCIÓN - NIVELES */
+  .niveles-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-top: 16px;
+  }
+  .nivel-card {
+    border-radius: var(--radius-lg); padding: 24px 20px;
+    border: 1px solid var(--border); position: relative;
+    overflow: hidden; transition: transform .2s, box-shadow .2s;
+  }
+  .nivel-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+  .nivel-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .nivel-4::before { background: #1a7a4a; }
+  .nivel-1::before { background: #1a56db; }
+  .nivel-2::before { background: #b45309; }
+  .nivel-3::before { background: #c0392b; }
+  .nivel-badge {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    border-radius: 20px; padding: 3px 10px; display: inline-block;
+    margin-bottom: 14px; text-transform: uppercase;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-blue { background: var(--accent2-bg); color: var(--accent2); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .nivel-card h3 {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 8px; letter-spacing: -0.3px;
+  }
+  .nivel-card .who {
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .nivel-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .nivel-card ul {
+    list-style: none; margin-top: 14px;
+  }
+  .nivel-card ul li {
+    font-size: 13px; color: var(--text-muted);
+    padding: 5px 0; border-top: 1px solid var(--border-light);
+    display: flex; align-items: flex-start; gap: 7px;
+  }
+  .nivel-card ul li::before {
+    content: '→'; color: var(--text-light); font-size: 12px;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* TABLET DEMO */
+  #demo { background: var(--surface); }
+  .demo-layout {
+    display: grid; grid-template-columns: 1fr 420px;
+    gap: 60px; align-items: start;
+  }
+  .demo-text h2 { margin-bottom: 20px; }
+  .demo-text p { margin-bottom: 16px; font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+  .demo-feature {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px 0; border-top: 1px solid var(--border);
+  }
+  .demo-feature:last-child { border-bottom: 1px solid var(--border); }
+  .demo-feature-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .demo-feature h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .demo-feature p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+  /* TABLET MOCKUP */
+  .tablet-frame {
+    background: #1a1a1a; border-radius: 24px;
+    padding: 14px; box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+    position: sticky; top: 80px;
+  }
+  .tablet-screen {
+    background: var(--white); border-radius: 14px;
+    overflow: hidden; font-family: var(--font-body);
+  }
+  .tablet-error-bar {
+    background: #fef2f2; border-bottom: 1px solid #fca5a5;
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .blink-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: #dc2626;
+    flex-shrink: 0; animation: blink2 1.2s step-end infinite;
+  }
+  @keyframes blink2 { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .tablet-error-bar .err-title { font-size: 15px; font-weight: 600; color: #7f1d1d; }
+  .tablet-error-bar .err-sub { font-size: 11px; color: #b91c1c; margin-top: 1px; }
+  .tablet-error-bar .err-timer {
+    margin-left: auto; font-size: 20px; font-weight: 600;
+    color: #dc2626; font-variant-numeric: tabular-nums;
+  }
+  .tablet-body { padding: 16px; }
+  .tablet-code-block {
+    background: #f8f7f5; border: 1px solid #e5e3df;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 12px;
+  }
+  .tablet-code-block .lbl { font-size: 10px; color: #9e9b97; margin-bottom: 4px; font-weight: 500; }
+  .tablet-code-block .code { font-family: monospace; font-size: 13px; font-weight: 600; color: #1a1a1a; }
+  .tablet-translate {
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+  }
+  .tablet-translate .lbl { font-size: 10px; color: #1d4ed8; margin-bottom: 4px; font-weight: 500; }
+  .tablet-translate p { font-size: 13px; color: #1e40af; line-height: 1.5; }
+  .tab-question { font-size: 12px; color: #6b6966; font-weight: 500; margin-bottom: 8px; }
+  .tab-options { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .tab-opt {
+    padding: 10px 14px; border-radius: 8px;
+    border: 1px solid #e5e3df; background: var(--white);
+    font-size: 13px; cursor: pointer; transition: background .15s, border-color .15s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab-opt.selected { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+  .tab-opt:hover { background: #f7f6f3; }
+  .tab-cta {
+    width: 100%; padding: 13px;
+    background: #dc2626; color: white;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background .15s;
+  }
+  .tab-cta:hover { background: #b91c1c; }
+
+  /* FLUJO */
+  .flujo-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; position: relative; margin-top: 40px;
+  }
+  .flujo-step {
+    text-align: center; padding: 0 12px; position: relative;
+  }
+  .flujo-step::after {
+    content: ''; position: absolute; top: 24px;
+    left: calc(50% + 24px); right: calc(-50% + 24px);
+    height: 1px; background: var(--border);
+  }
+  .flujo-step:last-child::after { display: none; }
+  .flujo-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--black); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 20px; margin: 0 auto 14px;
+    position: relative; z-index: 1;
+  }
+  .flujo-step h4 {
+    font-family: var(--font-display);
+    font-size: 14px; font-weight: 600; margin-bottom: 6px;
+  }
+  .flujo-step p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* DATOS CAPTURADOS */
+  #datos { background: var(--black); color: var(--white); }
+  #datos .section-title { color: var(--white); }
+  #datos .section-sub { color: rgba(255,255,255,0.5); }
+  .datos-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-top: 16px;
+  }
+  .dato-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg); padding: 22px 24px;
+    transition: border-color .2s;
+  }
+  .dato-card:hover { border-color: rgba(255,255,255,0.25); }
+  .dato-card .momento {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 16px; display: block;
+  }
+  .dato-card.auto .momento { color: #60a5fa; }
+  .dato-card.manual .momento { color: #fbbf24; }
+  .dato-card.cierre .momento { color: #34d399; }
+  .dato-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .dato-item:first-of-type { border-top: none; }
+  .dato-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 6px;
+  }
+  .dot-blue { background: #60a5fa; }
+  .dot-amber { background: #fbbf24; }
+  .dot-green { background: #34d399; }
+  .dato-item span { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  /* DASHBOARD */
+  .dashboard-preview {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px;
+    margin-top: 16px;
+  }
+  .dash-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 20px;
+  }
+  .dash-header h3 {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 600;
+  }
+  .dash-header span { font-size: 12px; color: var(--text-muted); }
+  .metrics-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 20px;
+  }
+  .metric {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .metric .mlabel { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .metric .mval {
+    font-family: var(--font-display);
+    font-size: 24px; font-weight: 700; letter-spacing: -0.5px;
+  }
+  .metric .mchange { font-size: 11px; margin-top: 4px; }
+  .mchange.pos { color: var(--green); }
+  .mchange.neg { color: var(--red); }
+  .bar-chart { margin-top: 8px; }
+  .bar-row {
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 10px; font-size: 12px;
+  }
+  .bar-label { width: 90px; color: var(--text-muted); flex-shrink: 0; text-align: right; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 4px; height: 10px; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-val { width: 34px; color: var(--text-muted); font-weight: 500; }
+
+  /* CONOCIMIENTO */
+  #conocimiento { background: var(--surface); }
+  .conocimiento-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 16px;
+  }
+  .conocimiento-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 28px;
+  }
+  .conocimiento-card h3 {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 600; margin-bottom: 12px;
+  }
+  .conocimiento-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+  .conocimiento-tag {
+    display: inline-block; font-size: 12px; font-weight: 500;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px; margin: 3px 3px 3px 0;
+    color: var(--text-muted);
+  }
+
+  /* IMPLEMENTACION */
+  .impl-steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 16px;
+  }
+  .impl-step {
+    padding: 28px; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); background: var(--white);
+  }
+  .impl-num {
+    font-family: var(--font-display);
+    font-size: 40px; font-weight: 700;
+    color: var(--surface2); letter-spacing: -2px;
+    line-height: 1; margin-bottom: 16px;
+  }
+  .impl-step h3 {
+    font-family: var(--font-display);
+    font-size: 17px; font-weight: 600; margin-bottom: 10px;
+  }
+  .impl-step p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+  .impl-duration {
+    display: inline-block; margin-top: 14px;
+    font-size: 12px; font-weight: 500;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 12px; color: var(--text-muted);
+  }
+
+  /* CTA FINAL */
+  .cta-section {
+    background: var(--black); color: var(--white);
+    padding: 100px 40px; text-align: center;
+  }
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: 700; letter-spacing: -1.2px;
+    margin-bottom: 20px; line-height: 1.15;
+  }
+  .cta-section h2 em { font-style: normal; color: #ff7a47; }
+  .cta-section p {
+    font-size: 17px; color: rgba(255,255,255,0.55);
+    max-width: 520px; margin: 0 auto 40px; line-height: 1.7;
+  }
+  .btn-white {
+    background: var(--white); color: var(--black);
+    padding: 14px 32px; border-radius: var(--radius);
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    display: inline-block; transition: transform .15s, background .15s;
+  }
+  .btn-white:hover { transform: translateY(-2px); background: #f0f0f0; }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 28px 40px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  footer p { font-size: 13px; color: var(--text-muted); }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700; color: var(--black);
+  }
+  .footer-logo span { color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 20px 50px; }
+    section { padding: 60px 20px; }
+    .problema-grid { grid-template-columns: 1fr; }
+    .niveles-grid { grid-template-columns: 1fr 1fr; }
+    .demo-layout { grid-template-columns: 1fr; }
+    .tablet-frame { position: static; max-width: 380px; margin: 0 auto; }
+    .flujo-steps { grid-template-columns: 1fr; }
+    .flujo-step::after { display: none; }
+    .datos-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .conocimiento-grid { grid-template-columns: 1fr; }
+    .impl-steps { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mant<span>IA</span></div>
+  <div class="nav-links">
+    <a href="#problema">Problema</a>
+    <a href="#solucion">Solución</a>
+    <a href="#demo">Demo tablet</a>
+    <a href="#datos">Datos</a>
+    <a href="#implementacion">Implementación</a>
+  </div>
+  <span class="nav-badge">Propuesta Ajover 2025</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Sistema de mantenimiento con inteligencia artificial</div>
+  <h1>Cada minuto parado<br>cuesta. <em>MantIA</em> lo<br>recupera.</h1>
+  <p>Un sistema inteligente para las máquinas de Ajover: detecta fallas, guía al operario, llama al técnico solo cuando es necesario, y documenta todo automáticamente.</p>
+  <div class="hero-cta">
+    <a href="#demo" class="btn-primary">Ver demo de la tablet →</a>
+    <a href="#solucion" class="btn-secondary">Cómo funciona</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">4<span>x</span></span>
+    <span class="stat-label">Tipos de respuesta según severidad</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">&lt;<span>30s</span></span>
+    <span class="stat-label">Para que el operario reporte el error</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">100<span>%</span></span>
+    <span class="stat-label">De eventos documentados automáticamente</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">0</span>
+    <span class="stat-label">Llamadas innecesarias al técnico o ingeniero</span>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section id="problema">
+  <div class="section-inner">
+    <span class="section-eyebrow">El problema hoy</span>
+    <h2 class="section-title">Las máquinas fallan. El proceso para repararlas también.</h2>
+    <p class="section-sub">En la planta de Ajover, cada falla activa una cadena de llamadas, confusión y tiempo perdido que se puede evitar.</p>
+    <div class="problema-grid">
+      <div class="problema-card">
+        <div class="icon icon-red">⚡</div>
+        <h3>Errores que nadie sabe leer</h3>
+        <p>Las máquinas muestran códigos de falla en su pantalla, pero los operarios no tienen forma de interpretarlos. El conocimiento está solo en la cabeza de una o dos personas, no en el sistema.</p>
+      </div>
+      <div class="problema-card">
+        <div class="icon icon-amber">📞</div>
+        <h3>Se llama al experto para todo</h3>
+        <p>Sin criterio claro de escalada, cualquier falla —incluso las simples— termina interrumpiendo al técnico o al ingeniero. Su tiempo se gasta en problemas que el operario podría resolver solo.</p>
+      </div>
+      <div class="problema-card">
+        <div class="icon icon-red">🔧</div>
+        <h3>Reparaciones sin trazabilidad</h3>
+        <p>No queda registro de qué falló, quién intervino, qué se hizo ni cuánto tardó. Es imposible detectar patrones, prevenir fallas repetidas o medir el impacto real del tiempo parado.</p>
+      </div>
+      <div class="problema-card">
+        <div class="icon icon-amber">🧠</div>
+        <h3>El conocimiento técnico no se transfiere</h3>
+        <p>Todo lo que saben los técnicos expertos existe únicamente en su memoria. Si alguno falta o se va, ese conocimiento se pierde. No hay forma de enseñarlo a escala.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUCIÓN NIVELES -->
+<section id="solucion">
+  <div class="section-inner">
+    <span class="section-eyebrow">La solución</span>
+    <h2 class="section-title">Cuatro niveles de respuesta. Solo llama a quien realmente se necesita.</h2>
+    <p class="section-sub">MantIA clasifica cada falla automáticamente y activa el nivel de respuesta correcto, desde la autosolución hasta la escalada al ingeniero.</p>
+    <div class="niveles-grid">
+      <div class="nivel-card nivel-4">
+        <span class="nivel-badge badge-green">Nivel automático</span>
+        <h3>Auto-acción</h3>
+        <div class="who">Sin intervención humana</div>
+        <p>La falla tiene solución automática conocida. El sistema la ejecuta directamente.</p>
+        <ul>
+          <li>Reinicio de subsistemas</li>
+          <li>Reset de comunicaciones</li>
+          <li>Limpiar buffers de error</li>
+          <li>Registro automático del evento</li>
+        </ul>
+      </div>
+      <div class="nivel-card nivel-1">
+        <span class="nivel-badge badge-blue">Nivel 1</span>
+        <h3>Operario</h3>
+        <div class="who">Cualquier persona en planta</div>
+        <p>La tablet guía paso a paso con lenguaje simple. Fotos, instrucciones claras, sin tecnicismos.</p>
+        <ul>
+          <li>Guía ilustrada en pantalla</li>
+          <li>Pasos verificables uno a uno</li>
+          <li>Si no resuelve, escala solo</li>
+          <li>Tiempo máximo configurable</li>
+        </ul>
+      </div>
+      <div class="nivel-card nivel-2">
+        <span class="nivel-badge badge-amber">Nivel 2</span>
+        <h3>Técnico de turno</h3>
+        <div class="who">Solo cuando el nivel 1 falla</div>
+        <p>Recibe notificación en su celular con todo el contexto: código, pasos ya intentados, historial.</p>
+        <ul>
+          <li>Alerta con contexto completo</li>
+          <li>Sin repetir lo ya intentado</li>
+          <li>Llega preparado, no a improvisar</li>
+          <li>Tiempo de respuesta monitoreado</li>
+        </ul>
+      </div>
+      <div class="nivel-card nivel-3">
+        <span class="nivel-badge badge-red">Nivel 3</span>
+        <h3>Ingeniero</h3>
+        <div class="who">Solo casos críticos</div>
+        <p>Se activa cuando los dos niveles anteriores no pudieron. Llega con el historial completo acumulado.</p>
+        <ul>
+          <li>Historial total del evento</li>
+          <li>Contexto de fallas similares</li>
+          <li>Escalada automática si hay demora</li>
+          <li>Firmado y documentado al cerrar</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLUJO -->
+<section>
+  <div class="section-inner">
+    <span class="section-eyebrow">Flujo de respuesta</span>
+    <h2 class="section-title">De la falla a la solución en el menor tiempo posible</h2>
+    <div class="flujo-steps">
+      <div class="flujo-step">
+        <div class="flujo-icon">⚠️</div>
+        <h4>Falla detectada</h4>
+        <p>La máquina muestra código. El timer empieza automáticamente.</p>
+      </div>
+      <div class="flujo-step">
+        <div class="flujo-icon">🤖</div>
+        <h4>IA analiza</h4>
+        <p>Consulta manual, historial y conocimiento técnico acumulado.</p>
+      </div>
+      <div class="flujo-step">
+        <div class="flujo-icon">📱</div>
+        <h4>Tablet guía</h4>
+        <p>Operario ve instrucciones claras. Marca pasos completados.</p>
+      </div>
+      <div class="flujo-step">
+        <div class="flujo-icon">🔔</div>
+        <h4>Escala si necesita</h4>
+        <p>Notificación al técnico o ingeniero, solo cuando corresponde.</p>
+      </div>
+      <div class="flujo-step">
+        <div class="flujo-icon">📊</div>
+        <h4>Todo documentado</h4>
+        <p>Tiempo, solución, responsable y resultado quedan registrados.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO TABLET -->
+<section id="demo">
+  <div class="section-inner">
+    <div class="demo-layout">
+      <div class="demo-text">
+        <span class="section-eyebrow">Demo interactiva</span>
+        <h2 class="section-title">La tablet al lado de cada máquina</h2>
+        <p>Una pantalla grande, táctil, diseñada para usarse con guantes y en condiciones de planta. No requiere que el operario sepa leer código de máquina ni tenga experiencia técnica.</p>
+
+        <div class="demo-feature">
+          <div class="demo-feature-icon icon-red">🔴</div>
+          <div>
+            <h4>Alerta visual inmediata</h4>
+            <p>Cuando ocurre la falla, la pantalla cambia completamente. No hay forma de ignorarla. El timer empieza a correr visible.</p>
+          </div>
+        </div>
+        <div class="demo-feature">
+          <div class="demo-feature-icon" style="background:#eff6ff;">💬</div>
+          <div>
+            <h4>Traducción del error en lenguaje simple</h4>
+            <p>El código técnico de la máquina se convierte en una explicación entendible. "Sobrecarga motor eje Z" → qué significa y por qué pasa.</p>
+          </div>
+        </div>
+        <div class="demo-feature">
+          <div class="demo-feature-icon" style="background:#edfaf2;">✅</div>
+          <div>
+            <h4>Pasos desbloqueables uno a uno</h4>
+            <p>El operario no puede saltarse pasos. Cada checkmark queda registrado. Si no resuelve, el sistema escala automáticamente.</p>
+          </div>
+        </div>
+        <div class="demo-feature">
+          <div class="demo-feature-icon" style="background:#fffbeb;">📷</div>
+          <div>
+            <h4>Foto opcional del problema</h4>
+            <p>El operario puede fotografiar lo que ve. La imagen queda adjunta al evento y el técnico la recibe antes de llegar.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLET MOCKUP -->
+      <div class="tablet-frame">
+        <div class="tablet-screen">
+          <div class="tablet-error-bar">
+            <div class="blink-dot"></div>
+            <div>
+              <div class="err-title">Error detectado</div>
+              <div class="err-sub">Código E-204 · Extrusora #7 · Línea B</div>
+            </div>
+            <div class="err-timer" id="tab-timer">0:23</div>
+          </div>
+          <div class="tablet-body">
+            <div class="tablet-code-block">
+              <div class="lbl">Pantalla de la máquina dice:</div>
+              <div class="code">SOBRECARGA MOTOR EJE Z — VERIFICAR TENSION</div>
+            </div>
+            <div class="tablet-translate">
+              <div class="lbl">Lo que significa:</div>
+              <p>El motor del eje Z está jalando más corriente de lo normal. Puede ser un atasco mecánico o problema en el variador de frecuencia.</p>
+            </div>
+            <div class="tab-question">¿Qué estaba haciendo la máquina?</div>
+            <div class="tab-options">
+              <div class="tab-opt selected" onclick="selectOpt(this)">▶ Producción normal</div>
+              <div class="tab-opt" onclick="selectOpt(this)">↺ Arranque de turno</div>
+              <div class="tab-opt" onclick="selectOpt(this)">⇄ Cambio de material</div>
+            </div>
+            <button class="tab-cta" onclick="this.textContent='Cargando pasos...'">Ver qué hacer →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATOS CAPTURADOS -->
+<section id="datos">
+  <div class="section-inner">
+    <span class="section-eyebrow" style="color:#60a5fa;">Registro automático</span>
+    <h2 class="section-title">Todo queda documentado. Sin esfuerzo extra.</h2>
+    <p class="section-sub">Cada evento genera un registro completo que se convierte en la base para medir ahorros, detectar patrones y tomar decisiones.</p>
+    <div class="datos-grid">
+      <div class="dato-card auto">
+        <span class="momento">⚡ Captura automática</span>
+        <div class="dato-item"><div class="dato-dot dot-blue"></div><span>Código de error y texto del display</span></div>
+        <div class="dato-item"><div class="dato-dot dot-blue"></div><span>Fecha, hora exacta y timestamp</span></div>
+        <div class="dato-item"><div class="dato-dot dot-blue"></div><span>ID de máquina y línea de producción</span></div>
+        <div class="dato-item"><div class="dato-dot dot-blue"></div><span>Turno activo (mañana / tarde / noche)</span></div>
+        <div class="dato-item"><div class="dato-dot dot-blue"></div><span>Timer de paro inicia inmediatamente</span></div>
+      </div>
+      <div class="dato-card manual">
+        <span class="momento">👆 El operario agrega (30 seg)</span>
+        <div class="dato-item"><div class="dato-dot dot-amber"></div><span>Qué estaba haciendo la máquina</span></div>
+        <div class="dato-item"><div class="dato-dot dot-amber"></div><span>Foto del problema (opcional)</span></div>
+        <div class="dato-item"><div class="dato-dot dot-amber"></div><span>¿Ya pasó antes hoy?</span></div>
+        <div class="dato-item"><div class="dato-dot dot-amber"></div><span>Identificación del operario de turno</span></div>
+        <div class="dato-item"><div class="dato-dot dot-amber"></div><span>Pasos ejecutados con checkmarks</span></div>
+      </div>
+      <div class="dato-card cierre">
+        <span class="momento">✅ Al resolver</span>
+        <div class="dato-item"><div class="dato-dot dot-green"></div><span>Tiempo total de paro (calculado)</span></div>
+        <div class="dato-item"><div class="dato-dot dot-green"></div><span>Nivel que resolvió (1 / 2 / 3 / auto)</span></div>
+        <div class="dato-item"><div class="dato-dot dot-green"></div><span>Solución aplicada (texto o selección)</span></div>
+        <div class="dato-item"><div class="dato-dot dot-green"></div><span>¿Definitivo o reparación temporal?</span></div>
+        <div class="dato-item"><div class="dato-dot dot-green"></div><span>Firma digital de quien cerró el evento</span></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PREVIEW -->
+    <div style="margin-top:48px;">
+      <span class="section-eyebrow" style="color:#60a5fa;">Dashboard gerencial</span>
+      <h3 style="font-family:var(--font-display); font-size:22px; font-weight:600; color:#fff; margin-bottom:8px; letter-spacing:-0.4px;">Lo que ve la gerencia cada semana</h3>
+      <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-bottom:24px;">Métricas reales del impacto del sistema en producción.</p>
+      <div class="dashboard-preview">
+        <div class="dash-header">
+          <h3>Resumen semana 23 — Planta Ajover</h3>
+          <span>Lun 2 – Vie 6 Jun 2025</span>
+        </div>
+        <div class="metrics-row">
+          <div class="metric">
+            <div class="mlabel">Tiempo parado total</div>
+            <div class="mval" style="color:#1a1a1a;">4h 12m</div>
+            <div class="mchange pos">↓ 38% vs semana anterior</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Eventos resueltos nivel 1</div>
+            <div class="mval" style="color:#1a56db;">14</div>
+            <div class="mchange pos">Sin necesidad de técnico</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Escaladas a técnico</div>
+            <div class="mval" style="color:#b45309;">5</div>
+            <div class="mchange pos">↓ 60% vs promedio anterior</div>
+          </div>
+          <div class="metric">
+            <div class="mlabel">Falla más frecuente</div>
+            <div class="mval" style="font-size:14px; color:#c0392b; margin-top:4px;">E-204</div>
+            <div class="mchange neg">Extrusora #7 · 3 veces</div>
+          </div>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:500; margin-bottom:10px;">Tiempo promedio de resolución por nivel</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Auto-acción</div>
+            <div class="bar-track"><div class="bar-fill" style="width:10%; background:#1a7a4a;"></div></div>
+            <div class="bar-val">1.2 min</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Nivel 1</div>
+            <div class="bar-track"><div class="bar-fill" style="width:28%; background:#1a56db;"></div></div>
+            <div class="bar-val">8 min</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Nivel 2</div>
+            <div class="bar-track"><div class="bar-fill" style="width:55%; background:#b45309;"></div></div>
+            <div class="bar-val">24 min</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Nivel 3</div>
+            <div class="bar-track"><div class="bar-fill" style="width:80%; background:#c0392b;"></div></div>
+            <div class="bar-val">52 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONOCIMIENTO -->
+<section id="conocimiento">
+  <div class="section-inner">
+    <span class="section-eyebrow">Base de conocimiento</span>
+    <h2 class="section-title">El saber técnico, capturado y disponible para todos</h2>
+    <p class="section-sub">El conocimiento del técnico experto deja de vivir solo en su cabeza y pasa a ser parte del sistema, consultable por cualquier operario en cualquier turno.</p>
+    <div class="conocimiento-grid">
+      <div class="conocimiento-card">
+        <h3>¿Qué contiene la base de conocimiento?</h3>
+        <p>Se alimenta de tres fuentes: los manuales originales de cada máquina, el historial de reparaciones documentadas, y el conocimiento directo del técnico experto grabado o dictado.</p>
+        <div>
+          <span class="conocimiento-tag">Manuales técnicos digitalizados</span>
+          <span class="conocimiento-tag">Historial de fallas resueltas</span>
+          <span class="conocimiento-tag">Videos y notas del técnico</span>
+          <span class="conocimiento-tag">Patrones de falla recurrente</span>
+          <span class="conocimiento-tag">Repuestos y proveedores</span>
+        </div>
+      </div>
+      <div class="conocimiento-card">
+        <h3>Modo "el técnico enseña"</h3>
+        <p>Una sección especial donde el técnico experto puede grabar en video, dictar por voz o escribir la solución mientras la ejecuta. Eso queda como conocimiento del sistema, no como recuerdo personal.</p>
+        <p>Con el tiempo, cuando ese mismo error aparezca, la IA puede mostrar: <em>"las últimas 4 veces que pasó esto, la solución fue X y tardó Y minutos."</em></p>
+        <div>
+          <span class="conocimiento-tag">Grabación de soluciones en video</span>
+          <span class="conocimiento-tag">Notas de voz transcritas</span>
+          <span class="conocimiento-tag">Trucos que no están en el manual</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPLEMENTACIÓN -->
+<section id="implementacion">
+  <div class="section-inner">
+    <span class="section-eyebrow">Plan de implementación</span>
+    <h2 class="section-title">Tres fases para tenerlo funcionando en planta</h2>
+    <p class="section-sub">Empezamos con una máquina piloto para demostrar resultados antes de expandir a toda la planta.</p>
+    <div class="impl-steps">
+      <div class="impl-step">
+        <div class="impl-num">01</div>
+        <h3>Piloto en una máquina</h3>
+        <p>Instalamos la tablet en la máquina con más fallas históricas. Digitalizamos su manual, cargamos los errores conocidos y entrenamos al técnico experto para alimentar la base de conocimiento.</p>
+        <span class="impl-duration">Semanas 1–3</span>
+      </div>
+      <div class="impl-step">
+        <div class="impl-num">02</div>
+        <h3>Ajuste y validación</h3>
+        <p>Con datos reales del piloto, afinamos la clasificación de errores, los textos de guía al operario y los criterios de escalada. Medimos tiempo de paro antes y después.</p>
+        <span class="impl-duration">Semanas 4–6</span>
+      </div>
+      <div class="impl-step">
+        <div class="impl-num">03</div>
+        <h3>Expansión a toda la planta</h3>
+        <p>Con los resultados del piloto demostrados, replicamos el sistema a las demás máquinas. El conocimiento acumulado en el piloto ya sirve de base para las otras.</p>
+        <span class="impl-duration">A partir de semana 7</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-section">
+  <h2>El conocimiento técnico es el<br>activo más valioso de la planta.<br><em>No debería vivir solo en una cabeza.</em></h2>
+  <p>MantIA lo captura, lo distribuye y lo convierte en ahorro medible desde el primer mes de operación.</p>
+  <a href="#problema" class="btn-white">Volver al inicio</a>
+</div>
+
+<footer>
+  <div class="footer-logo">Mant<span>IA</span></div>
+  <p>Propuesta para Ajover S.A. · Sistema de mantenimiento con IA · 2025</p>
+  <p style="font-size:12px;">Confidencial — Solo para uso interno</p>
+</footer>
+
+<script>
+  var s = 23;
+  setInterval(function() {
+    s++;
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    var txt = m + ':' + (sec < 10 ? '0' : '') + sec;
+    var el = document.getElementById('tab-timer');
+    if (el) el.textContent = txt;
+  }, 1000);
+
+  function selectOpt(el) {
+    document.querySelectorAll('.tab-opt').forEach(function(o) { o.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
