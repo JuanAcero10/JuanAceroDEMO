@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kenxon Car Audio — Sonido de nivel profesional para tu auto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0a0a0a;
+    --black-soft:#131313;
+    --surface:#181818;
+    --surface-line:#2a2a2a;
+    --orange:#f36b21;
+    --orange-deep:#c94f14;
+    --orange-glow:rgba(243,107,33,.30);
+    --white:#f4f1ea;
+    --grey:#8f8b85;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    letter-spacing:.01em;
+    line-height:1.06;
+    text-transform:uppercase;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  ::selection{background:var(--orange);color:var(--black);}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,10,10,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--surface-line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;
+    letter-spacing:.02em;
+  }
+  .logo span{color:var(--orange);}
+  .nav-links{display:flex;gap:36px;font-size:.92rem;font-weight:500;}
+  .nav-links a{color:var(--grey);transition:color .2s;}
+  .nav-links a:hover{color:var(--white);}
+  .nav-cta{
+    background:var(--orange);color:var(--black);
+    padding:10px 22px;font-weight:600;font-size:.88rem;
+    clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  }
+  .menu-btn{display:none;background:none;border:0;color:var(--white);font-size:1.5rem;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:120px 0 100px;
+    border-bottom:1px solid var(--surface-line);
+  }
+  .eq-bars{
+    position:absolute;inset:0;display:flex;align-items:flex-end;
+    justify-content:center;gap:6px;opacity:.35;z-index:0;
+    padding-bottom:0;
+  }
+  .eq-bars span{
+    width:14px;background:linear-gradient(180deg,var(--orange),var(--orange-deep));
+    animation:pulse 2.4s ease-in-out infinite;
+    transform-origin:bottom;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scaleY(.3);}
+    50%{transform:scaleY(1);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .eq-bars span{animation:none;transform:scaleY(.55);}
+  }
+  .hero-inner{position:relative;z-index:1;max-width:760px;}
+  .hero-kicker{
+    color:var(--orange);font-family:'Oswald',sans-serif;font-weight:500;
+    font-size:.95rem;letter-spacing:.02em;margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,6vw,4.6rem);
+    margin-bottom:24px;
+  }
+  .hero p{
+    color:var(--grey);font-size:1.1rem;max-width:520px;margin-bottom:38px;
+  }
+  .btn-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    padding:15px 30px;font-weight:600;font-size:.95rem;
+    font-family:'Oswald',sans-serif;letter-spacing:.02em;
+    clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
+    display:inline-block;
+  }
+  .btn-primary{background:var(--orange);color:var(--black);}
+  .btn-outline{border:1px solid var(--surface-line);color:var(--white);}
+  .btn-outline:hover{border-color:var(--orange);color:var(--orange);}
+
+  .hero-stats{
+    display:flex;gap:48px;margin-top:64px;flex-wrap:wrap;
+    position:relative;z-index:1;
+  }
+  .hero-stats div{border-left:2px solid var(--orange);padding-left:14px;}
+  .hero-stats b{display:block;font-family:'Oswald',sans-serif;font-size:1.7rem;}
+  .hero-stats small{color:var(--grey);font-size:.82rem;}
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:96px 0;}
+  .sec-head{max-width:600px;margin-bottom:56px;}
+  .sec-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:14px;}
+  .sec-head p{color:var(--grey);font-size:1.02rem;}
+
+  /* ---------- CATEGORIES ---------- */
+  .categories{border-bottom:1px solid var(--surface-line);}
+  .cat-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    background:var(--surface-line);
+  }
+  .cat-card{
+    background:var(--black-soft);padding:36px 30px;
+    transition:background .2s;
+  }
+  .cat-card:hover{background:var(--surface);}
+  .cat-card svg{width:44px;height:44px;margin-bottom:22px;}
+  .cat-card h3{font-size:1.15rem;margin-bottom:10px;}
+  .cat-card p{color:var(--grey);font-size:.92rem;}
+
+  /* ---------- PRODUCTS ---------- */
+  .products-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
+  }
+  .product-card{
+    background:var(--black-soft);border:1px solid var(--surface-line);
+    clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%);
+  }
+  .product-media{
+    aspect-ratio:1/1;background:
+      radial-gradient(circle at 50% 45%,var(--orange-glow),transparent 60%),
+      var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--surface-line);
+  }
+  .product-media svg{width:74px;height:74px;}
+  .product-info{padding:20px 22px 24px;}
+  .product-tag{
+    color:var(--orange);font-size:.75rem;font-weight:600;
+    font-family:'Oswald',sans-serif;letter-spacing:.03em;margin-bottom:6px;
+  }
+  .product-info h3{font-size:1.05rem;text-transform:none;margin-bottom:8px;
+    font-family:'Inter',sans-serif;font-weight:600;}
+  .product-specs{color:var(--grey);font-size:.84rem;margin-bottom:16px;}
+  .product-price{
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--surface-line);padding-top:14px;
+  }
+  .product-price b{font-family:'Oswald',sans-serif;font-size:1.1rem;}
+  .product-price a{color:var(--grey);font-size:.85rem;}
+  .product-price a:hover{color:var(--orange);}
+
+  /* ---------- TECH BANNER ---------- */
+  .tech{
+    background:var(--black-soft);border-top:1px solid var(--surface-line);
+    border-bottom:1px solid var(--surface-line);
+  }
+  .tech-grid{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;
+  }
+  .tech-item .num{
+    font-family:'Oswald',sans-serif;font-size:2.8rem;color:var(--orange);
+    line-height:1;margin-bottom:14px;
+  }
+  .tech-item h3{font-size:1.05rem;text-transform:none;
+    font-family:'Inter',sans-serif;font-weight:600;margin-bottom:8px;}
+  .tech-item p{color:var(--grey);font-size:.92rem;}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    background:linear-gradient(120deg,var(--orange-deep),var(--orange));
+    color:var(--black);
+  }
+  .cta-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:28px;
+  }
+  .cta h2{color:var(--black);font-size:clamp(1.7rem,3vw,2.3rem);max-width:520px;}
+  .cta .btn-outline{border-color:var(--black);color:var(--black);}
+  .cta .btn-outline:hover{background:var(--black);color:var(--orange);}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:64px 0 32px;}
+  .foot-grid{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;
+    padding-bottom:48px;border-bottom:1px solid var(--surface-line);
+  }
+  .foot-brand p{color:var(--grey);font-size:.9rem;margin-top:14px;max-width:280px;}
+  .foot-col h4{
+    font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:.02em;
+    margin-bottom:16px;color:var(--white);
+  }
+  .foot-col a{
+    display:block;color:var(--grey);font-size:.9rem;margin-bottom:10px;
+    transition:color .2s;
+  }
+  .foot-col a:hover{color:var(--orange);}
+  .foot-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;flex-wrap:wrap;gap:12px;
+  }
+  .foot-bottom p{color:var(--grey);font-size:.82rem;}
+  .socials{display:flex;gap:14px;}
+  .socials a{
+    width:36px;height:36px;border:1px solid var(--surface-line);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .socials a:hover{border-color:var(--orange);}
+  .socials svg{width:16px;height:16px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:900px){
+    .nav-links,.nav-cta{display:none;}
+    .menu-btn{display:block;}
+    .cat-grid{grid-template-columns:1fr 1fr;}
+    .products-grid{grid-template-columns:1fr 1fr;}
+    .tech-grid{grid-template-columns:1fr;gap:36px;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px;}
+    .cat-grid{grid-template-columns:1fr;}
+    .products-grid{grid-template-columns:1fr;}
+    .hero{padding:90px 0 70px;}
+    .foot-grid{grid-template-columns:1fr;}
+    .hero-stats{gap:28px;}
+  }
+
+  :focus-visible{outline:2px solid var(--orange);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap" style="padding-left:0;padding-right:0;">
+    <div class="logo">KEN<span>XON</span></div>
+    <div class="nav-links">
+      <a href="#categorias">Categorías</a>
+      <a href="#productos">Productos</a>
+      <a href="#tecnologia">Tecnología</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a href="#contacto" class="nav-cta">Encuentra tu distribuidor</a>
+    <button class="menu-btn" aria-label="Abrir menú">☰</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eq-bars" aria-hidden="true">
+    <span style="height:40%;animation-delay:.0s"></span>
+    <span style="height:70%;animation-delay:.15s"></span>
+    <span style="height:35%;animation-delay:.3s"></span>
+    <span style="height:90%;animation-delay:.05s"></span>
+    <span style="height:55%;animation-delay:.4s"></span>
+    <span style="height:80%;animation-delay:.2s"></span>
+    <span style="height:45%;animation-delay:.35s"></span>
+    <span style="height:65%;animation-delay:.1s"></span>
+    <span style="height:30%;animation-delay:.25s"></span>
+    <span style="height:85%;animation-delay:.0s"></span>
+    <span style="height:50%;animation-delay:.3s"></span>
+    <span style="height:75%;animation-delay:.15s"></span>
+    <span style="height:40%;animation-delay:.4s"></span>
+    <span style="height:60%;animation-delay:.05s"></span>
+    <span style="height:88%;animation-delay:.2s"></span>
+    <span style="height:35%;animation-delay:.35s"></span>
+    <span style="height:70%;animation-delay:.1s"></span>
+    <span style="height:48%;animation-delay:.25s"></span>
+  </div>
+  <div class="wrap hero-inner">
+    <div class="hero-kicker">Componentes de audio automotriz</div>
+    <h1>Convierte tu auto en un sistema de sonido de nivel profesional</h1>
+    <p>Amplificadores, medios, tweeters, subwoofers, crossovers y
+       procesadores diseñados para instaladores que no negocian la
+       calidad del sonido.</p>
+    <div class="btn-row">
+      <a href="#productos" class="btn btn-primary">Ver productos</a>
+      <a href="#categorias" class="btn btn-outline">Explorar categorías</a>
+    </div>
+    <div class="hero-stats">
+      <div><b>6</b><small>líneas de producto</small></div>
+      <div><b>15+</b><small>años de ingeniería</small></div>
+      <div><b>20Hz–20kHz</b><small>rango de respuesta</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="categories" id="categorias">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Cada componente, a su nivel</h2>
+      <p>Un sistema de sonido es tan bueno como su eslabón más débil.
+         Kenxon cubre las seis piezas que definen cómo suena tu auto.</p>
+    </div>
+  </div>
+  <div class="cat-grid">
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <rect x="6" y="12" width="36" height="24" rx="1"/>
+        <line x1="12" y1="18" x2="12" y2="30"/>
+        <line x1="16" y1="18" x2="16" y2="30"/>
+        <line x1="20" y1="18" x2="20" y2="30"/>
+        <circle cx="32" cy="24" r="5"/>
+        <line x1="32" y1="20.5" x2="32" y2="24" stroke-width="1.6"/>
+      </svg>
+      <h3>Amplificadores</h3>
+      <p>Clase D y AB, de 1 a 5 canales, para llevar potencia real
+         sin perder control ni claridad.</p>
+    </div>
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <circle cx="24" cy="24" r="17"/>
+        <circle cx="24" cy="24" r="10"/>
+        <circle cx="24" cy="24" r="3.4" fill="#f36b21" stroke="none"/>
+      </svg>
+      <h3>Medios</h3>
+      <p>Reproducción de rango medio limpia y precisa, la base de
+         una escena sonora bien construida.</p>
+    </div>
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <circle cx="24" cy="24" r="12"/>
+        <circle cx="24" cy="24" r="4" fill="#f36b21" stroke="none"/>
+        <path d="M24 6 v4M24 38 v4M6 24 h4M38 24 h4" stroke-width="1.6"/>
+      </svg>
+      <h3>Tweeters</h3>
+      <p>Agudos definidos y extendidos, sin fatiga auditiva incluso
+         a volúmenes altos.</p>
+    </div>
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <circle cx="24" cy="24" r="19"/>
+        <circle cx="24" cy="24" r="13"/>
+        <circle cx="24" cy="24" r="6" fill="#f36b21" stroke="none"/>
+      </svg>
+      <h3>Bajos (subwoofers)</h3>
+      <p>Graves profundos y compactos, diseñados para pegar fuerte
+         sin distorsionar.</p>
+    </div>
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <path d="M8 24 h10 M30 24 h10" stroke-width="2"/>
+        <path d="M18 24 c0 -8 4 -8 4 -8 M18 24 c0 8 4 8 4 8" stroke-width="1.6"/>
+        <path d="M30 24 c0 -8 -4 -8 -4 -8 M30 24 c0 8 -4 8 -4 8" stroke-width="1.6"/>
+        <circle cx="24" cy="24" r="2.4" fill="#f36b21" stroke="none"/>
+      </svg>
+      <h3>Crossovers</h3>
+      <p>Divisores de frecuencia pasivos y activos que reparten la
+         señal al parlante correcto.</p>
+    </div>
+
+    <div class="cat-card">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="2">
+        <rect x="12" y="12" width="24" height="24" rx="2"/>
+        <rect x="19" y="19" width="10" height="10"/>
+        <line x1="16" y1="6" x2="16" y2="12" stroke-width="1.6"/>
+        <line x1="24" y1="6" x2="24" y2="12" stroke-width="1.6"/>
+        <line x1="32" y1="6" x2="32" y2="12" stroke-width="1.6"/>
+        <line x1="16" y1="36" x2="16" y2="42" stroke-width="1.6"/>
+        <line x1="24" y1="36" x2="24" y2="42" stroke-width="1.6"/>
+        <line x1="32" y1="36" x2="32" y2="42" stroke-width="1.6"/>
+      </svg>
+      <h3>Procesadores DSP</h3>
+      <p>Ajuste digital fino de tiempo, curva y ganancia para afinar
+         el sistema completo.</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="productos">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Productos destacados</h2>
+      <p>Una muestra del catálogo. Cada línea está pensada para un
+         nivel de instalación distinto, del auto diario a la
+         competencia SPL.</p>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-media">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="1.6">
+            <rect x="6" y="12" width="36" height="24" rx="1"/>
+            <line x1="12" y1="18" x2="12" y2="30"/><line x1="16" y1="18" x2="16" y2="30"/>
+            <circle cx="32" cy="24" r="5"/>
+          </svg>
+        </div>
+        <div class="product-info">
+          <div class="product-tag">Amplificador</div>
+          <h3>KX-AMP 800.4</h3>
+          <p class="product-specs">4 canales · 800W RMS · Clase D</p>
+          <div class="product-price"><b>$389.900</b><a href="#">Ver ficha</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-media">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="1.6">
+            <circle cx="24" cy="24" r="19"/><circle cx="24" cy="24" r="13"/>
+            <circle cx="24" cy="24" r="6" fill="#f36b21" stroke="none"/>
+          </svg>
+        </div>
+        <div class="product-info">
+          <div class="product-tag">Subwoofer</div>
+          <h3>KX-SUB 12D2</h3>
+          <p class="product-specs">12" · 500W RMS · Doble bobina 2Ω</p>
+          <div class="product-price"><b>$459.900</b><a href="#">Ver ficha</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-media">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="1.6">
+            <circle cx="24" cy="24" r="12"/><circle cx="24" cy="24" r="4" fill="#f36b21" stroke="none"/>
+            <path d="M24 6 v4M24 38 v4M6 24 h4M38 24 h4"/>
+          </svg>
+        </div>
+        <div class="product-info">
+          <div class="product-tag">Tweeter</div>
+          <h3>KX-TW 25S</h3>
+          <p class="product-specs">1" seda · 120W RMS · Par</p>
+          <div class="product-price"><b>$129.900</b><a href="#">Ver ficha</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-media">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#f36b21" stroke-width="1.6">
+            <rect x="12" y="12" width="24" height="24" rx="2"/>
+            <rect x="19" y="19" width="10" height="10"/>
+          </svg>
+        </div>
+        <div class="product-info">
+          <div class="product-tag">Procesador</div>
+          <h3>KX-DSP 8CH</h3>
+          <p class="product-specs">8 canales · EQ 31 bandas · App</p>
+          <div class="product-price"><b>$679.900</b><a href="#">Ver ficha</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="tech" id="tecnologia">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Ingeniería antes que marketing</h2>
+      <p>Especificaciones reales, medidas bajo condiciones estándar,
+         no números inflados en la caja.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <div class="num">RMS real</div>
+        <h3>Potencia certificada</h3>
+        <p>Cada watt en la ficha técnica es watt continuo medido,
+           no potencia pico de laboratorio.</p>
+      </div>
+      <div class="tech-item">
+        <div class="num">±0.5dB</div>
+        <h3>Respuesta plana</h3>
+        <p>Curvas de frecuencia ajustadas para reproducir la señal
+           tal como fue grabada.</p>
+      </div>
+      <div class="tech-item">
+        <div class="num">IP54</div>
+        <h3>Materiales duraderos</h3>
+        <p>Componentes resistentes a calor, vibración y humedad
+           propios del ambiente de un vehículo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap cta-inner">
+    <h2>Arma tu sistema con un asesor técnico, no con un vendedor</h2>
+    <a href="#contacto" class="btn btn-outline">Hablar con Kenxon</a>
+  </div>
+</section>
+
+<footer id="contacto">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">KEN<span>XON</span></div>
+        <p>Componentes de audio automotriz para instaladores y
+           entusiastas que exigen calidad de sonido real.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Productos</h4>
+        <a href="#">Amplificadores</a>
+        <a href="#">Medios</a>
+        <a href="#">Tweeters</a>
+        <a href="#">Subwoofers</a>
+        <a href="#">Crossovers</a>
+        <a href="#">Procesadores</a>
+      </div>
+      <div class="foot-col">
+        <h4>Empresa</h4>
+        <a href="#">Nosotros</a>
+        <a href="#">Distribuidores</a>
+        <a href="#">Garantía</a>
+        <a href="#">Soporte técnico</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contacto</h4>
+        <a href="mailto:info@kenxon.com">info@kenxon.com</a>
+        <a href="tel:+573000000000">+57 300 000 0000</a>
+        <div class="socials" style="margin-top:8px;">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M15 8h-2a2 2 0 0 0-2 2v10M9 13h6"/>
+              <path d="M15 4H8a4 4 0 0 0-4 4v9a4 4 0 0 0 4 4h9"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="6" width="18" height="12" rx="3"/>
+              <path d="M11 10l4 2-4 2z" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 Kenxon Car Audio. Todos los derechos reservados.</p>
+      <p>Diseñado para instaladores exigentes.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
